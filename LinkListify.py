@@ -45,27 +45,85 @@ class Playlist:
             self.head = new_song
 
     def remove_song_by_title(self, title):
-        pass
+        if self.is_empty():     # checks if playlist is empty, if it is, return without doing anything
+            print("Playlist is empty.")
+            return
+        current = self.head
+        while current:
+            if current.title == title:
+                if current.prev: # if song is not the first song, set prior song's next to current' next
+                    current.prev.next = current.next
+                else: # if song is the first song, set head to current's next
+                    self.head = current.next
+                if current.next: # if not last song, set next song's prev to current's prev
+                    current.next.prev = current.prev
+                else: # if song is the last song, set tail to current's prev
+                    self.tail = current.prev
+
+                print(f"'{title}' removed from playlist.")
+                return
+            
+            current = current.next
+        print(f"'{title}' not found in playlist.")
+
 
     def remove_last_song(self):
         if self.head == None:
+            print("Playlist is empty.")
             return
         if self.head.next == None:
+            print(f"'{self.head.title}' has been removed from playlist.")
             self.head = None
             self.tail = None
             return
+        
         current = self.tail # set current to tail
+        print(f"'{current.title}' has been removed from playlist.")
         self.tail = current.prev # set new tail to song before old tail
-        current.next = None # remove song after new tail (remove the song that was the old tail)
+        self.tail.next = None 
 
     def display_playlist(self):
-        pass
+        if self.is_empty():
+            print("Playlist is empty.")
+            return
+        current = self.head
+        count = 1
+        while current:
+            print(f"{count}. {current}")
+            current = current.next
+            count += 1
 
     def count_songs(self):
-        pass
+        count = 0
+        current = self.head
+        while current:
+            count += 1
+            current = current.next
+        return count
+    
 
     def find_song(self, title):
-        pass
+        current = self.head
+        while current:
+            if current.title == title:
+                return current
+            current = current.next
+        return None
 
     def reverse_playlist(self):
-        pass
+        current = self.head
+        prev = None
+        while current:
+            next_song = current.next 
+            current.next = prev  # reverse the next pointer to point to the previous song
+            current.prev = next_song # reverse the prev pointer to point to the next song
+            prev = current # move prev to current
+            current = next_song 
+        self.head, self.tail = self.tail, self.head # swap head and tail after reversing the playlist
+        if self.head:
+            self.head.prev = None
+        if self.tail:
+            self.tail.next = None
+
+
+
