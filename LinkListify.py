@@ -1,8 +1,10 @@
+# classes for song and playlist
+
 class Song:
     def __init__(self,title,artist,duration):
         self.title = title
         self.artist = artist
-        self.duration = duration
+        self.duration = duration # in seconds
         self.next = None
         self.prev = None
 
@@ -89,7 +91,7 @@ class Playlist:
         current = self.head
         count = 1
         while current:
-            print(f"{count}. {current}")
+            print(f"{count}. {current} (Duration: {current.duration}s)")
             current = current.next
             count += 1
 
@@ -125,5 +127,49 @@ class Playlist:
         if self.tail:
             self.tail.next = None
 
+# main loop
 
+playlist = Playlist() # create playlist
+playlist.add_song_at_end("In the Air Tonight","Phil Collins",299) # 299 from 4*60 + 59
+playlist.add_song_at_end("Allentown","Billy Joel",232) # 232 from 3*60 + 52
+playlist.add_song_at_end("Abacab","Genesis",422) # x from 7*60 + 2
 
+while True:
+    print("Select a number to make a change...")
+    print("1: Add song")
+    print("2: Remove song")
+    print("3: Display playlist")
+    print("4: Count songs")
+    print("5: Find a song")
+    print("6: Reverse playlist")
+    print("0: Exit")
+    n = int(input("What would you like to do?"))
+
+    if n == 1:
+        title = input("Enter song title:")
+        artist = input("Enter song's artist:")
+        duration = int(input("Enter song duration:"))
+        playlist.add_song_at_end(title,artist,duration)
+        print("{title} has been added")
+    elif n == 2:
+        title = input("Enter song title:")
+        playlist.remove_song_by_title(title)
+    elif n == 3:
+        playlist.display_playlist()
+    elif n == 4:
+        song_count = playlist.count_songs()
+        print(f"There are {song_count} songs")
+    elif n == 5:
+        title = input("Enter song title:")
+        position = playlist.find_song(title)
+        if position == None:
+            print("Song not found")
+        else:
+            print(f"Song found: {position}")
+    elif n == 6:
+        playlist.reverse_playlist()
+        print("Playlist has been reversed")
+    elif n == 0:
+        break
+    else:
+        print("Invalid input.")
