@@ -127,6 +127,25 @@ class Playlist:
         if self.tail:
             self.tail.next = None
 
+    def total_duration(self):
+        total_seconds = 0
+        current = self.head
+        while current:
+            total_seconds += current.duration
+            current = current.next
+        minutes = total_seconds // 60
+        seconds = total_seconds % 60
+        return f"{minutes:02d}:{seconds:02d}"
+    
+    def find_songs_by_artist(self, artist_name):
+        songs = []
+        current = self.head
+        while current:
+            if current.artist == artist_name:
+                songs.append(current)
+            current = current.next
+        return songs
+
 # main loop
 
 playlist = Playlist() # create playlist
@@ -142,13 +161,15 @@ while True:
     print("4: Count songs")
     print("5: Find a song")
     print("6: Reverse playlist")
+    print("7: Display playlist duration")
+    print("8: Find songs by arist")
     print("0: Exit")
     n = int(input("What would you like to do?"))
 
     if n == 1:
-        title = input("Enter song title:")
-        artist = input("Enter song's artist:")
-        duration = int(input("Enter song duration:"))
+        title = input("Enter song title: ")
+        artist = input("Enter song's artist: ")
+        duration = int(input("Enter song duration: "))
         playlist.add_song_at_end(title,artist,duration)
         print("{title} has been added")
     elif n == 2:
@@ -160,7 +181,7 @@ while True:
         song_count = playlist.count_songs()
         print(f"There are {song_count} songs")
     elif n == 5:
-        title = input("Enter song title:")
+        title = input("Enter song title: ")
         position = playlist.find_song(title)
         if position == None:
             print("Song not found")
@@ -169,6 +190,15 @@ while True:
     elif n == 6:
         playlist.reverse_playlist()
         print("Playlist has been reversed")
+    elif n == 7:
+        duration = playlist.total_duration()
+        print(f"Total duration: {duration}")
+    elif n == 8:
+        song_artist = input("Enter artist name: ")
+        songs = playlist.find_songs_by_artist(song_artist)
+        print(f"{song_artist}:")
+        for song in songs:
+            print(song)
     elif n == 0:
         break
     else:
