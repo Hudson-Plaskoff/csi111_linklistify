@@ -15,6 +15,7 @@ class Playlist:
     def __init__(self):
         self.head = None
         self.tail = None
+        self.current_song = None
 
     def is_empty(self):
         if self.head == None:
@@ -26,6 +27,7 @@ class Playlist:
         if self.is_empty(): # if playlist empty, add as first and last song
             self.head = new_song
             self.tail = self.head
+            self.current_song = self.head
             return
         else: # if playlist not empty, add as last song
             current = self.head
@@ -40,6 +42,7 @@ class Playlist:
         if self.is_empty(): # if playlist empty, add as first song and last song
             self.head = new_song
             self.tail = self.head
+            self.current_song = self.head
             return
         else: # if playlist not empty, add as first song
             new_song.next = self.head
@@ -145,6 +148,30 @@ class Playlist:
                 songs.append(current)
             current = current.next
         return songs
+    
+    def play_current_song(self):    
+        if self.current_song is None:
+            print("No song is currently playing.")
+        else:
+            print(f"Now playing: {self.current_song}")
+
+    def next_song(self):
+        if self.current_song is None:
+            print("No song is currently playing.")
+        elif self.current_song.next is None:
+            print("You are at the end of the playlist.")
+        else:
+            self.current_song = self.current_song.next
+            self.play_current_song()
+    
+    def previous_song(self):
+        if self.current_song is None:
+            print("No song is currently playing.")
+        elif self.current_song.prev is None:
+            print("You are at the beginning of the playlist.")
+        else:
+            self.current_song = self.current_song.prev
+            self.play_current_song()
 
 # main loop
 
@@ -163,6 +190,9 @@ while True:
     print("6: Reverse playlist")
     print("7: Display playlist duration")
     print("8: Find songs by arist")
+    print("9: Play song")
+    print("10: Next song")
+    print("11: Previous song")
     print("0: Exit")
     n = int(input("What would you like to do?"))
 
@@ -199,6 +229,12 @@ while True:
         print(f"{song_artist}:")
         for song in songs:
             print(song)
+    elif n == 9:
+        playlist.play_current_song()
+    elif n == 10:
+        playlist.next_song()
+    elif n == 11:
+        playlist.previous_song()
     elif n == 0:
         break
     else:
